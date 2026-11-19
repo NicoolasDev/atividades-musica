@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0d1117">
+  <title>Atividades de Música</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script defer src="js/config.js"></script>
+  <script defer src="js/audio.js"></script>
+  <script defer src="js/piano.js"></script>
+  <script defer src="js/game.js"></script>
+  <script defer src="js/ui.js"></script>
+  <script defer src="js/main.js"></script>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="site-header">
+      <nav class="activity-navigation" id="activity-navigation" aria-label="Navegação da atividade" hidden>
+        <button class="icon-button" id="home-button" type="button" aria-label="Menu inicial" title="Menu inicial">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>
+        </button>
+        <button class="icon-button" id="back-button" type="button" aria-label="Voltar uma etapa" title="Voltar uma etapa">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6M9 12h12"/></svg>
+        </button>
+      </nav>
+    </header>
+
+    <section class="screen home-screen" id="home-screen" aria-labelledby="home-title">
+      <div class="intro">
+        <p class="eyebrow">APRENDIZADO MUSICAL</p>
+        <h1 id="home-title">Escolha uma atividade</h1>
+        <p>Avance no seu ritmo: comece pelas notas, explore o teclado e treine o ouvido.</p>
+      </div>
+      <div class="activity-grid">
+        <button class="activity-card activity-card-featured" type="button" data-activity="3">
+          <span class="activity-card-title">Desafio de Ouvido</span>
+          <span class="activity-card-copy">Ouça uma sequência e reproduza as notas na ordem. Alterne timbres e teste sua percepção musical.</span>
+          <span class="activity-card-action">Começar desafio <span aria-hidden="true">→</span></span>
+        </button>
+        <button class="activity-card" type="button" data-activity="1">
+          <span class="activity-card-title">Notas e Cifras</span>
+          <span class="activity-card-copy">Etapa preparatória · relacione os nomes às cifras.</span>
+          <span class="activity-card-action">Começar <span aria-hidden="true">→</span></span>
+        </button>
+        <button class="activity-card" type="button" data-activity="2">
+          <span class="activity-card-title">Mapa das Notas</span>
+          <span class="activity-card-copy">Etapa preparatória · encontre as cifras no piano.</span>
+          <span class="activity-card-action">Começar <span aria-hidden="true">→</span></span>
+        </button>
+      </div>
+    </section>
+
+    <section class="screen settings-screen" id="activity1-setup-screen" aria-labelledby="activity1-settings-title" hidden>
+      <div class="intro">
+        <p class="eyebrow">ATIVIDADE 1</p>
+        <h1 id="activity1-settings-title">Notas e Cifras</h1>
+        <p>Escolha o nível e identifique cada nota por sua cifra.</p>
+      </div>
+      <div class="settings-panel">
+        <fieldset class="setting-group" data-setting="match-level">
+          <legend>Nível</legend>
+          <div class="segmented-control">
+            <button type="button" class="segment is-active" data-value="basic" aria-pressed="true">Básico · notas naturais</button>
+            <button type="button" class="segment" data-value="complete" aria-pressed="false">Completo · inclui sustenidos</button>
+          </div>
+        </fieldset>
+        <button class="button button-primary start-button" id="activity1-start-button" type="button">Começar atividade <span aria-hidden="true">→</span></button>
+      </div>
+    </section>
+
+    <section class="screen match-screen" id="activity1-game-screen" aria-labelledby="activity1-title" hidden>
+      <div class="game-heading">
+        <div><p class="eyebrow">ATIVIDADE 1 · NOTAS E CIFRAS</p><h1 id="activity1-title">Qual é a cifra?</h1></div>
+      </div>
+      <div class="game-toolbar" aria-label="Progresso da atividade">
+        <p>Notas <strong id="match-progress">0/7</strong></p><p>Acertos <strong id="match-score">0</strong></p>
+      </div>
+      <p class="instruction">Observe a nota e escolha a cifra correspondente.</p>
+      <div class="note-question-card" aria-live="polite">
+        <span>NOTA EM PORTUGUÊS</span>
+        <strong id="match-note">Dó</strong>
+      </div>
+      <div class="answer-panel">
+        <h2 id="cipher-options-title">Cifras</h2>
+        <div class="answer-grid" id="cipher-options" aria-labelledby="cipher-options-title"></div>
+      </div>
+      <p class="live-message" id="match-message" aria-live="polite"></p>
+      <div class="inline-actions">
+        <button class="button button-secondary restart-button" type="button">Reiniciar / Trocar Config.</button>
+        <button class="button button-primary" id="match-again-button" type="button" hidden>Jogar novamente</button>
+      </div>
+    </section>
+
+    <section class="screen settings-screen" id="settings-screen" aria-labelledby="settings-title" hidden>
+      <div class="intro">
+        <p class="eyebrow">ATIVIDADE 2 · MAPA DAS NOTAS</p>
+        <h1 id="settings-title">Ligue cada cifra à tecla</h1>
+        <p>Escolha uma configuração e conecte cada nota à tecla correta.</p>
+      </div>
+      <div class="settings-panel">
+        <fieldset class="setting-group" data-setting="notation">
+          <legend>Exibir notas como</legend>
+          <div class="segmented-control">
+            <button type="button" class="segment" data-value="portuguese" aria-pressed="false">Português</button>
+            <button type="button" class="segment is-active" data-value="cipher" aria-pressed="true">Cifra</button>
+          </div>
+        </fieldset>
+        <fieldset class="setting-group" data-setting="level">
+          <legend>Nível</legend>
+          <div class="segmented-control">
+            <button type="button" class="segment is-active" data-value="white" aria-pressed="true">Só teclas brancas</button>
+            <button type="button" class="segment" data-value="all" aria-pressed="false">Brancas + pretas</button>
+          </div>
+        </fieldset>
+        <fieldset class="setting-group" data-setting="quantity">
+          <legend>Quantidade de notas</legend>
+          <div class="segmented-control quantity-control">
+            <button type="button" class="segment is-active" data-value="5" aria-pressed="true">5</button>
+            <button type="button" class="segment" data-value="7" aria-pressed="false">7</button>
+            <button type="button" class="segment" data-value="12" aria-pressed="false" hidden>12</button>
+          </div>
+        </fieldset>
+        <p class="settings-hint" id="settings-hint">Com teclas brancas, o limite é 7 notas.</p>
+        <button class="button button-primary start-button" id="start-button" type="button">Começar rodada <span aria-hidden="true">→</span></button>
+      </div>
+    </section>
+
+    <section class="screen game-screen" id="game-screen" aria-labelledby="game-title" hidden>
+      <div class="game-heading">
+        <div><p class="eyebrow" id="round-label">RODADA</p><h1 id="game-title">Mapa das Notas</h1></div>
+        <div class="heading-actions">
+          <button class="button button-secondary restart-button" type="button">Reiniciar / Trocar Config.</button>
+          <button class="button button-muted" id="mute-button" type="button" aria-pressed="false"><span aria-hidden="true">♪</span> Som ligado</button>
+        </div>
+      </div>
+      <div class="game-toolbar" aria-label="Progresso da rodada">
+        <p>Conectadas <strong id="progress-value">0/0</strong></p><p>Acertos <strong id="score-value">0</strong></p><p>Erros <strong id="errors-value">0</strong></p><p>Tempo <strong id="timer-value">00:00</strong></p>
+      </div>
+      <p class="instruction" id="game-instruction">Escolha uma cifra e depois a tecla, ou o contrário.</p>
+      <div class="cards-area" id="cards-area" aria-label="Nomes das notas"></div>
+      <div class="keyboard-frame"><div class="keyboard" id="keyboard" aria-label="Piano virtual de Dó4 a Si4"></div></div>
+      <p class="live-message" id="live-message" aria-live="polite"></p>
+    </section>
+
+    <section class="screen settings-screen" id="activity3-setup-screen" aria-labelledby="activity3-settings-title" hidden>
+      <div class="intro">
+        <p class="eyebrow">ATIVIDADE 3</p><h1 id="activity3-settings-title">Desafio de Ouvido</h1>
+        <p>Ouça com atenção e reproduza cada sequência no teclado.</p>
+      </div>
+      <div class="settings-panel">
+        <label class="setting-label" for="timbre-select">Timbre</label>
+        <select id="timbre-select" class="select-control">
+          <option value="soft-piano">Piano Suave</option><option value="synth">Sintetizador</option>
+          <option value="organ">Órgão</option><option value="marimba">Marimba / Sino</option>
+        </select>
+        <p class="settings-hint">O timbre selecionado será alternado com os demais a cada questão.</p>
+        <button class="button button-primary start-button" id="activity3-start-button" type="button">Começar desafio <span aria-hidden="true">→</span></button>
+      </div>
+    </section>
+
+    <section class="screen game-screen" id="activity3-game-screen" aria-labelledby="activity3-title" hidden>
+      <div class="game-heading">
+        <div><p class="eyebrow">ATIVIDADE 3 · DESAFIO DE OUVIDO</p><h1 id="activity3-title">Repita a sequência</h1></div>
+        <button class="button button-secondary restart-button" type="button">Reiniciar / Trocar Config.</button>
+      </div>
+      <div class="game-toolbar" aria-label="Progresso do desafio">
+        <p>Questão <strong id="sequence-question">1 de 12</strong></p><p>Notas restantes <strong id="sequence-remaining">0</strong></p><p>Timbre <strong id="sequence-timbre">Piano Suave</strong></p>
+      </div>
+      <div class="sequence-controls"><button class="button button-secondary" id="replay-sequence-button" type="button">🔊 Ouvir novamente</button></div>
+      <p class="instruction" id="sequence-instruction">Ouça e reproduza as notas na mesma ordem.</p>
+      <div class="sequence-history" id="sequence-history" aria-label="Histórico de cliques" aria-live="polite"></div>
+      <p class="keyboard-mobile-hint">Dica: vire o celular na horizontal para visualizar as duas oitavas.</p>
+      <div class="keyboard-scroll" aria-label="Piano de duas oitavas com rolagem horizontal">
+        <div class="keyboard-frame keyboard-frame-wide"><div class="keyboard keyboard-double" id="sequence-keyboard" aria-label="Piano virtual de Dó4 a Si5"></div></div>
+      </div>
+      <p class="live-message" id="sequence-message" aria-live="polite"></p>
+    </section>
+
+    <section class="screen summary-screen" id="summary-screen" aria-labelledby="summary-title" hidden>
+      <p class="eyebrow">RODADA CONCLUÍDA</p><h1 id="summary-title">Muito bem.</h1><p class="summary-subtitle">Veja como foi seu exercício.</p>
+      <div class="summary-grid">
+        <article class="summary-card"><span>Acertos</span><strong id="summary-correct">0</strong></article>
+        <article class="summary-card"><span>Erros</span><strong id="summary-errors">0</strong></article>
+        <article class="summary-card"><span>Precisão</span><strong id="summary-accuracy">0%</strong></article>
+        <article class="summary-card"><span>Tempo</span><strong id="summary-time">00:00</strong></article>
+      </div>
+      <div class="summary-actions">
+        <button class="button button-primary" id="new-round-button" type="button">Nova rodada</button>
+        <button class="button button-secondary" id="settings-button" type="button">Voltar às configurações</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
