@@ -14,7 +14,7 @@
       return {
         id: note.id,
         frequency: note.frequency,
-        displayName: names.length > 1 ? names[Math.floor(Math.random() * names.length)] : names[0]
+        displayName: names[0]
       };
     });
 

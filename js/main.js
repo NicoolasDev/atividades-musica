@@ -24,6 +24,7 @@
   let sequenceIndex = 0;
   let sequenceInputIndex = 0;
   let sequenceErrors = 0;
+  let sequenceErrorsForQuestion = 0;
   let sequenceStartedAt = 0;
   let sequenceIsPlaying = false;
   let sequenceSessionId = 0;
@@ -292,6 +293,9 @@
     badge.textContent = note.names.cipher[0];
     badge.setAttribute("aria-label", note.names.cipher[0] + (isCorrect ? ", correta" : ", incorreta"));
     history.appendChild(badge);
+    while (history.childElementCount > config.SEQUENCE_HISTORY_LIMIT) {
+      history.removeChild(history.firstElementChild);
+    }
     history.scrollLeft = history.scrollWidth;
   }
 
@@ -333,14 +337,14 @@
     return new Promise(function (resolve) { window.setTimeout(resolve, milliseconds); });
   }
 
-  async function playCurrentSequence(sessionId) {
+  async function playCurrentSequence(sessionId, calmReplay) {
     if (sequenceIsPlaying || sequenceIndex >= sequenceQuestions.length) {
       return;
     }
     sequenceIsPlaying = true;
     setSequenceKeyboardDisabled(true);
     ui.getElements()["replay-sequence-button"].disabled = true;
-    ui.getElements()["sequence-message"].textContent = "Ouça com atenção…";
+    ui.getElements()["sequence-message"].textContent = calmReplay ? "Ouça de novo com calma." : "Ouça com atenção…";
     const timbre = getSequenceTimbre();
     ui.getElements()["sequence-timbre"].textContent = timbre.name;
     const sequence = sequenceQuestions[sequenceIndex];
@@ -358,8 +362,10 @@
       }
       sequenceInputIndex = 0;
       ui.getElements()["sequence-remaining"].textContent = String(sequence.length);
-      ui.getElements()["sequence-instruction"].textContent = "Agora reproduza as notas na mesma ordem.";
-      ui.getElements()["sequence-message"].textContent = "Sua vez!";
+      if (!calmReplay) {
+        ui.getElements()["sequence-instruction"].textContent = "Agora reproduza as notas na mesma ordem.";
+        ui.getElements()["sequence-message"].textContent = "Sua vez!";
+      }
       setSequenceKeyboardDisabled(false);
     } catch (error) {
       ui.showAudioError(error);
@@ -381,6 +387,7 @@
     sequenceIndex = 0;
     sequenceInputIndex = 0;
     sequenceErrors = 0;
+    sequenceErrorsForQuestion = 0;
     sequenceStartedAt = Date.now();
     const sequenceSettings = ui.getSettings();
     sequenceTimbreMode = sequenceSettings["timbre-mode"] || "vary";
@@ -431,6 +438,7 @@
       ui.showFeedback("Correto: " + matchedNote.names.cipher[0] + ".", false, ui.getElements()["sequence-message"]);
       if (sequenceInputIndex === sequence.length) {
         sequenceIndex += 1;
+        sequenceErrorsForQuestion = 0;
         if (sequenceIndex >= sequenceQuestions.length) {
           setSequenceKeyboardDisabled(true);
           showSummary({
@@ -454,12 +462,23 @@
 
     key.classList.add("is-wrong");
     sequenceErrors += 1;
+    sequenceErrorsForQuestion += 1;
     clearKeyFeedback(key);
     appendSequenceHistory(note, false);
     sequenceInputIndex = 0;
     ui.getElements()["sequence-remaining"].textContent = String(sequence.length);
-    ui.getElements()["sequence-instruction"].textContent = "A sequência reinicia após um erro. Tente novamente.";
+    const shouldReplay = config.ERRORS_BEFORE_REPLAY > 0
+      && sequenceErrorsForQuestion >= config.ERRORS_BEFORE_REPLAY;
+    if (shouldReplay) {
+      sequenceErrorsForQuestion = 0;
+      ui.getElements()["sequence-instruction"].textContent = "Ouça de novo com calma.";
+    } else {
+      ui.getElements()["sequence-instruction"].textContent = "A sequência reinicia após um erro. Tente novamente.";
+    }
     ui.showFeedback("Não foi dessa vez. Ouça novamente para tentar de novo.", true, ui.getElements()["sequence-message"]);
+    if (shouldReplay) {
+      playCurrentSequence(sequenceSessionId, true);
+    }
   }
 
   function bindEvents() {
@@ -568,6 +587,9 @@
     ui.setSetting("timbre-mode", "vary");
     ui.setSetting("fixed-timbre", "soft-piano");
     ui.setMuteButton(audio.isMuted());
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+      || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    document.getElementById("ios-audio-hint").hidden = !isIOS;
     bindEvents();
     ui.showScreen("home-screen");
   }

@@ -117,10 +117,15 @@
     }));
   });
 
+  const SEQUENCE_HISTORY_LIMIT = 20;
+  const ERRORS_BEFORE_REPLAY = 5;
+
   window.KeyMatch = window.KeyMatch || {};
   window.KeyMatch.Config = Object.freeze({
     notes: notes,
     MATCH_ANY_OCTAVE: true,
+    SEQUENCE_HISTORY_LIMIT: SEQUENCE_HISTORY_LIMIT,
+    ERRORS_BEFORE_REPLAY: ERRORS_BEFORE_REPLAY,
     notationOptions: ["portuguese", "cipher"],
     levelOptions: ["white", "all"],
     quantityOptions: [5, 7, 12],

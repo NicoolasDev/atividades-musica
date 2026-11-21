@@ -37,7 +37,19 @@
       }
     }
     if (audioContext.state !== "running") {
-      await audioContext.resume();
+      let timeoutId;
+      try {
+        await Promise.race([
+          audioContext.resume(),
+          new Promise(function (_, reject) {
+            timeoutId = window.setTimeout(function () {
+              reject(new Error("Toque na tela para ativar o som."));
+            }, 1500);
+          })
+        ]);
+      } finally {
+        window.clearTimeout(timeoutId);
+      }
     }
   }
 
