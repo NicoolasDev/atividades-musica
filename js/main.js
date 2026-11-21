@@ -17,13 +17,21 @@
   let matchQueue = [];
   let matchCurrent = null;
   let matchCorrectIds = new Set();
+  let matchErrors = 0;
+  let matchStartedAt = 0;
   let sequenceNotes = [];
   let sequenceQuestions = [];
   let sequenceIndex = 0;
   let sequenceInputIndex = 0;
+  let sequenceErrors = 0;
+  let sequenceStartedAt = 0;
   let sequenceIsPlaying = false;
   let sequenceSessionId = 0;
-  let selectedTimbreIndex = 0;
+  let sequenceTimbreMode = "vary";
+  let fixedTimbreId = "soft-piano";
+  let previousTimbreId = null;
+  let currentSequenceTimbre = null;
+  let summarySettingsAction = showSetup;
 
   function shuffle(items) {
     return config.shuffle(items);
@@ -102,7 +110,13 @@
         stopClock();
         const elapsedMs = gameLogic.getElapsedMs(game, Date.now());
         ui.updateTimer(elapsedMs);
-        window.setTimeout(function () { ui.showSummary(game, elapsedMs); }, config.animation.messageMs);
+        window.setTimeout(function () {
+          showSummary({
+            correct: game.matchedIds.size,
+            errors: game.errors,
+            elapsedMs: elapsedMs
+          }, createRound, showSetup);
+        }, config.animation.messageMs);
       }
       return;
     }
@@ -174,6 +188,14 @@
     ui.showScreen("activity3-setup-screen");
   }
 
+  function showSummary(metrics, onNewRound, onSettings) {
+    summarySettingsAction = onSettings;
+    ui.showSummary(metrics, {
+      onNewRound: onNewRound,
+      onSettings: onSettings
+    });
+  }
+
   function goBackOneStep() {
     const activeScreen = document.querySelector(".screen:not([hidden])").id;
     if (activeScreen === "activity1-game-screen") {
@@ -182,8 +204,10 @@
       showHome();
     } else if (activeScreen === "activity3-game-screen") {
       showActivity3Setup();
-    } else if (activeScreen === "game-screen" || activeScreen === "summary-screen") {
+    } else if (activeScreen === "game-screen") {
       showSetup();
+    } else if (activeScreen === "summary-screen") {
+      summarySettingsAction();
     }
   }
 
@@ -193,10 +217,11 @@
     matchQueue = shuffle(matchPairs);
     matchCurrent = null;
     matchCorrectIds = new Set();
+    matchErrors = 0;
+    matchStartedAt = Date.now();
     matchLocked = false;
     ui.getElements()["match-score"].textContent = "0";
     ui.getElements()["match-message"].textContent = "";
-    ui.getElements()["match-again-button"].hidden = true;
     ui.showScreen("activity1-game-screen");
     updateMatchProgress();
     advanceMatchQuestion();
@@ -223,10 +248,11 @@
   function advanceMatchQuestion() {
     if (matchQueue.length === 0) {
       matchCurrent = null;
-      ui.getElements()["match-note"].textContent = "Concluído!";
-      ui.getElements()["cipher-options"].replaceChildren();
-      ui.getElements()["match-message"].textContent = "Muito bem! Você identificou todas as notas.";
-      ui.getElements()["match-again-button"].hidden = false;
+      showSummary({
+        correct: matchCorrectIds.size,
+        errors: matchErrors,
+        elapsedMs: Math.max(0, Date.now() - matchStartedAt)
+      }, renderMatchCards, showActivity1Setup);
       return;
     }
     matchCurrent = matchQueue.shift();
@@ -243,6 +269,7 @@
     const isCorrect = button.dataset.noteId === matchCurrent.id;
     button.classList.add(isCorrect ? "is-matched" : "is-wrong");
     if (!isCorrect) {
+      matchErrors += 1;
       button.classList.add("is-shaking");
       matchQueue.push(matchCurrent);
       ui.showFeedback("Essa cifra não corresponde. A nota voltará para a rodada.", true, ui.getElements()["match-message"]);
@@ -268,8 +295,32 @@
     history.scrollLeft = history.scrollWidth;
   }
 
+  function chooseSequenceTimbre() {
+    if (sequenceTimbreMode === "fixed") {
+      currentSequenceTimbre = config.timbres.find(function (timbre) {
+        return timbre.id === fixedTimbreId;
+      });
+    } else {
+      const availableTimbres = config.timbres.filter(function (timbre) {
+        return timbre.id !== previousTimbreId;
+      });
+      currentSequenceTimbre = availableTimbres[Math.floor(Math.random() * availableTimbres.length)];
+      previousTimbreId = currentSequenceTimbre.id;
+    }
+    return currentSequenceTimbre;
+  }
+
   function getSequenceTimbre() {
-    return config.timbres[(selectedTimbreIndex + sequenceIndex) % config.timbres.length];
+    return currentSequenceTimbre || chooseSequenceTimbre();
+  }
+
+  function createSequenceQuestions() {
+    return [2, 3, 4, 5].reduce(function (questions, length) {
+      const matchingSequences = config.sequenceBank.filter(function (sequence) {
+        return sequence.length === length;
+      });
+      return questions.concat(shuffle(matchingSequences).slice(0, 3));
+    }, []);
   }
 
   function setSequenceKeyboardDisabled(disabled) {
@@ -326,12 +377,16 @@
     sequenceIsPlaying = false;
     const sessionId = sequenceSessionId;
     sequenceNotes = config.getNotesForOctaves([4, 5]);
-    sequenceQuestions = shuffle(config.sequenceBank).slice(0, 12);
+    sequenceQuestions = createSequenceQuestions();
     sequenceIndex = 0;
     sequenceInputIndex = 0;
-    selectedTimbreIndex = Math.max(0, config.timbres.findIndex(function (timbre) {
-      return timbre.id === ui.getElements()["timbre-select"].value;
-    }));
+    sequenceErrors = 0;
+    sequenceStartedAt = Date.now();
+    const sequenceSettings = ui.getSettings();
+    sequenceTimbreMode = sequenceSettings["timbre-mode"] || "vary";
+    fixedTimbreId = sequenceSettings["fixed-timbre"] || "soft-piano";
+    previousTimbreId = null;
+    chooseSequenceTimbre();
     window.KeyMatch.Piano.renderKeyboard(ui.getElements()["sequence-keyboard"], sequenceNotes, { showLabels: true });
     ui.getElements()["sequence-history"].replaceChildren();
     ui.getElements()["replay-sequence-button"].textContent = "🔊 Ouvir novamente";
@@ -362,7 +417,11 @@
     if (note) {
       audio.playNote(note.frequency, getSequenceTimbre().id).catch(ui.showAudioError);
     }
-    if (key.dataset.keyId === expectedId) {
+    const expectedNote = sequenceNotes.find(function (item) { return item.id === expectedId; });
+    const isExpectedNote = config.MATCH_ANY_OCTAVE
+      ? note && expectedNote && note.pitch === expectedNote.pitch
+      : key.dataset.keyId === expectedId;
+    if (isExpectedNote) {
       appendSequenceHistory(note, true);
       key.classList.add("is-correct");
       clearKeyFeedback(key);
@@ -374,17 +433,19 @@
         sequenceIndex += 1;
         if (sequenceIndex >= sequenceQuestions.length) {
           setSequenceKeyboardDisabled(true);
-          ui.getElements()["sequence-question"].textContent = sequenceQuestions.length + " de " + sequenceQuestions.length;
-          ui.getElements()["sequence-remaining"].textContent = "0";
-          ui.getElements()["sequence-instruction"].textContent = "Desafio concluído!";
-          ui.getElements()["sequence-message"].textContent = "Parabéns! Você completou as 12 questões.";
-          ui.getElements()["replay-sequence-button"].textContent = "Jogar novamente";
+          showSummary({
+            correct: sequenceQuestions.length,
+            errors: sequenceErrors,
+            elapsedMs: Math.max(0, Date.now() - sequenceStartedAt)
+          }, startSequenceSession, showActivity3Setup);
           return;
         }
         sequenceInputIndex = 0;
+        chooseSequenceTimbre();
         ui.getElements()["sequence-history"].replaceChildren();
         updateSequenceProgress();
         ui.getElements()["sequence-instruction"].textContent = "Próxima sequência…";
+        setSequenceKeyboardDisabled(true);
         const sessionId = sequenceSessionId;
         window.setTimeout(function () { playCurrentSequence(sessionId); }, 900);
       }
@@ -392,6 +453,7 @@
     }
 
     key.classList.add("is-wrong");
+    sequenceErrors += 1;
     clearKeyFeedback(key);
     appendSequenceHistory(note, false);
     sequenceInputIndex = 0;
@@ -453,7 +515,6 @@
 
     ui.getElements()["activity1-start-button"].addEventListener("click", renderMatchCards);
     ui.getElements()["activity3-start-button"].addEventListener("click", startSequenceSession);
-    ui.getElements()["match-again-button"].addEventListener("click", renderMatchCards);
     ui.getElements()["cipher-options"].addEventListener("click", function (event) {
       const button = event.target.closest(".cipher-option");
       if (button) {
@@ -478,11 +539,11 @@
         onKeyClick(key);
       }
     });
-    ui.getElements()["mute-button"].addEventListener("click", function () {
-      ui.setMuteButton(audio.toggleMute());
+    document.querySelectorAll(".mute-button").forEach(function (button) {
+      button.addEventListener("click", function () {
+        ui.setMuteButton(audio.toggleMute());
+      });
     });
-    ui.getElements()["new-round-button"].addEventListener("click", createRound);
-    ui.getElements()["settings-button"].addEventListener("click", showSetup);
 
     ui.getElements()["replay-sequence-button"].addEventListener("click", function () {
       if (sequenceIndex >= sequenceQuestions.length) {
@@ -504,6 +565,9 @@
     ui.setSetting("notation", "cipher");
     ui.setSetting("level", "white");
     ui.setSetting("match-level", "basic");
+    ui.setSetting("timbre-mode", "vary");
+    ui.setSetting("fixed-timbre", "soft-piano");
+    ui.setMuteButton(audio.isMuted());
     bindEvents();
     ui.showScreen("home-screen");
   }

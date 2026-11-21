@@ -16,10 +16,10 @@
       "game-instruction", "live-message", "mute-button", "summary-correct",
       "summary-errors", "summary-accuracy", "summary-time", "new-round-button",
       "settings-button", "match-note", "cipher-options", "match-progress",
-      "match-score", "match-message", "match-again-button", "sequence-keyboard", "sequence-history",
+      "match-score", "match-message", "sequence-keyboard", "sequence-history",
       "sequence-question", "sequence-remaining", "sequence-timbre",
       "sequence-instruction", "sequence-message", "replay-sequence-button",
-      "timbre-select", "activity1-start-button", "activity3-start-button"
+      "activity1-start-button", "activity3-start-button", "fixed-timbre-settings"
     ].forEach(function (id) { elements[id] = document.getElementById(id); });
     screenIds.forEach(function (id) { elements[id] = document.getElementById(id); });
     return elements;
@@ -58,6 +58,8 @@
       elements["settings-hint"].textContent = value === "white"
         ? "Com teclas brancas, o limite é 7 notas."
         : "12 notas inclui todas as teclas da oitava.";
+    } else if (groupName === "timbre-mode") {
+      elements["fixed-timbre-settings"].hidden = value !== "fixed";
     }
   }
 
@@ -142,21 +144,25 @@
     }, config.animation.messageMs);
   }
 
-  function showSummary(game, elapsedMs) {
-    const attempts = game.matchedIds.size + game.errors;
-    const accuracy = attempts ? Math.round((game.matchedIds.size / attempts) * 100) : 0;
-    elements["summary-correct"].textContent = String(game.matchedIds.size);
-    elements["summary-errors"].textContent = String(game.errors);
+  function showSummary(metrics, actions) {
+    const attempts = metrics.correct + metrics.errors;
+    const accuracy = attempts ? Math.round((metrics.correct / attempts) * 100) : 0;
+    elements["summary-correct"].textContent = String(metrics.correct);
+    elements["summary-errors"].textContent = String(metrics.errors);
     elements["summary-accuracy"].textContent = accuracy + "%";
-    elements["summary-time"].textContent = formatTime(elapsedMs);
+    elements["summary-time"].textContent = formatTime(metrics.elapsedMs);
+    elements["new-round-button"].onclick = actions.onNewRound;
+    elements["settings-button"].onclick = actions.onSettings;
     showScreen("summary-screen");
   }
 
   function setMuteButton(isMuted) {
-    elements["mute-button"].setAttribute("aria-pressed", String(isMuted));
-    elements["mute-button"].innerHTML = isMuted
-      ? '<span aria-hidden="true">♪</span> Som desligado'
-      : '<span aria-hidden="true">♪</span> Som ligado';
+    document.querySelectorAll(".mute-button").forEach(function (button) {
+      button.setAttribute("aria-pressed", String(isMuted));
+      button.innerHTML = isMuted
+        ? '<span aria-hidden="true">♪</span> Som desligado'
+        : '<span aria-hidden="true">♪</span> Som ligado';
+    });
   }
 
   function showAudioError(error) {

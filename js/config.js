@@ -58,25 +58,73 @@
   }
 
   const sequenceBank = [
-    ["c4", "e4"], ["g4", "d4"], ["a4", "c4"], ["f4", "d4"],
-    ["c4", "d4", "e4"], ["e4", "g4", "c4"], ["a4", "f4", "g4"], ["d4", "f4", "a4"],
-    ["c4", "e4", "g4", "c5"], ["g4", "e4", "d4", "c4"], ["f4", "a4", "c5", "g4"],
-    ["d4", "g4", "b4", "e5", "c5"], ["c4", "g4", "e5", "d4", "a4"],
-    ["a4", "c5", "e5", "g4", "d5"], ["f4", "a4", "g4", "c5", "e5"]
+    ["c4", "f4"], ["d4", "a4"], ["e4", "b4"], ["g4", "c5"], ["a4", "d5"], ["f4", "b4"],
+    ["c4", "g4", "d4"], ["d4", "b4", "e4"], ["e4", "a4", "f4"],
+    ["g4", "d4", "a4"], ["b4", "f4", "c5"], ["a4", "e4", "g4"],
+    ["c4", "a4", "e4", "b4"], ["d4", "g4", "c5", "e4"],
+    ["f4", "b4", "d5", "a4"], ["g4", "c5", "f4", "a4"],
+    ["a4", "d5", "g4", "c5"], ["e4", "b4", "f4", "d5"],
+    ["c4", "e4", "a4", "d5", "g4"], ["d4", "a4", "f4", "c5", "e4"],
+    ["e4", "b4", "g4", "d5", "a4"], ["f4", "c5", "g4", "b4", "d5"],
+    ["g4", "d5", "a4", "e5", "c5"], ["b4", "e5", "a4", "f4", "c5"]
   ];
+
+  const timbreDefinitions = [
+    {
+      id: "soft-piano",
+      name: "Piano Suave",
+      level: 0.2,
+      partials: [{ ratio: 1, amplitude: 1 }, { ratio: 2, amplitude: 0.34 }, { ratio: 3, amplitude: 0.13 }],
+      envelope: { attack: 0.005, decay: 0.9, sustain: 0.002, release: 0.18, duration: 1.1 }
+    },
+    {
+      id: "synth",
+      name: "Sintetizador",
+      level: 0.19,
+      partials: [{ ratio: 1, amplitude: 1, type: "sawtooth" }],
+      envelope: { attack: 0.015, decay: 0.4, sustain: 0.38, release: 0.16, duration: 0.78 },
+      filter: { start: 5200, end: 750 }
+    },
+    {
+      id: "organ",
+      name: "Órgão",
+      level: 0.2,
+      partials: [{ ratio: 1, amplitude: 1 }, { ratio: 2, amplitude: 1 }, { ratio: 3, amplitude: 1 }, { ratio: 4, amplitude: 1 }],
+      envelope: { attack: 0.02, decay: 0.18, sustain: 0.82, release: 0.1, duration: 0.72 }
+    },
+    {
+      id: "flute",
+      name: "Flauta",
+      level: 0.22,
+      partials: [{ ratio: 1, amplitude: 1 }, { ratio: 2, amplitude: 0.1 }],
+      envelope: { attack: 0.06, decay: 0.28, sustain: 0.74, release: 0.16, duration: 0.9 },
+      vibrato: { rate: 5.2, depth: 0.003 }
+    },
+    {
+      id: "marimba",
+      name: "Marimba / Sino",
+      level: 0.21,
+      partials: [{ ratio: 1, amplitude: 1 }, { ratio: 3.9, amplitude: 0.42 }, { ratio: 9.2, amplitude: 0.16 }],
+      envelope: { attack: 0.004, decay: 0.24, sustain: 0.002, release: 0.1, duration: 0.48 }
+    }
+  ];
+  const timbres = timbreDefinitions.map(function (timbre) {
+    return Object.freeze(Object.assign({}, timbre, {
+      partials: Object.freeze(timbre.partials.map(function (partial) { return Object.freeze(partial); })),
+      envelope: Object.freeze(timbre.envelope),
+      filter: timbre.filter ? Object.freeze(timbre.filter) : null,
+      vibrato: timbre.vibrato ? Object.freeze(timbre.vibrato) : null
+    }));
+  });
 
   window.KeyMatch = window.KeyMatch || {};
   window.KeyMatch.Config = Object.freeze({
     notes: notes,
+    MATCH_ANY_OCTAVE: true,
     notationOptions: ["portuguese", "cipher"],
     levelOptions: ["white", "all"],
     quantityOptions: [5, 7, 12],
-    timbres: Object.freeze([
-      Object.freeze({ id: "soft-piano", name: "Piano Suave" }),
-      Object.freeze({ id: "synth", name: "Sintetizador" }),
-      Object.freeze({ id: "organ", name: "Órgão" }),
-      Object.freeze({ id: "marimba", name: "Marimba / Sino" })
-    ]),
+    timbres: Object.freeze(timbres),
     sequenceBank: Object.freeze(sequenceBank.map(function (sequence) {
       return Object.freeze(sequence.slice());
     })),

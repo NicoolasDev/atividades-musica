@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0d1117">
   <title>Atividades de Música</title>
   <link rel="stylesheet" href="css/style.css">
@@ -72,6 +72,9 @@
     <section class="screen match-screen" id="activity1-game-screen" aria-labelledby="activity1-title" hidden>
       <div class="game-heading">
         <div><p class="eyebrow">ATIVIDADE 1 · NOTAS E CIFRAS</p><h1 id="activity1-title">Qual é a cifra?</h1></div>
+        <div class="heading-actions">
+          <button class="button button-muted mute-button" id="activity1-mute-button" type="button" aria-pressed="false"><span aria-hidden="true">♪</span> Som ligado</button>
+        </div>
       </div>
       <div class="game-toolbar" aria-label="Progresso da atividade">
         <p>Notas <strong id="match-progress">0/7</strong></p><p>Acertos <strong id="match-score">0</strong></p>
@@ -88,7 +91,6 @@
       <p class="live-message" id="match-message" aria-live="polite"></p>
       <div class="inline-actions">
         <button class="button button-secondary restart-button" type="button">Reiniciar / Trocar Config.</button>
-        <button class="button button-primary" id="match-again-button" type="button" hidden>Jogar novamente</button>
       </div>
     </section>
 
@@ -131,7 +133,7 @@
         <div><p class="eyebrow" id="round-label">RODADA</p><h1 id="game-title">Mapa das Notas</h1></div>
         <div class="heading-actions">
           <button class="button button-secondary restart-button" type="button">Reiniciar / Trocar Config.</button>
-          <button class="button button-muted" id="mute-button" type="button" aria-pressed="false"><span aria-hidden="true">♪</span> Som ligado</button>
+          <button class="button button-muted mute-button" id="mute-button" type="button" aria-pressed="false"><span aria-hidden="true">♪</span> Som ligado</button>
         </div>
       </div>
       <div class="game-toolbar" aria-label="Progresso da rodada">
@@ -149,12 +151,23 @@
         <p>Ouça com atenção e reproduza cada sequência no teclado.</p>
       </div>
       <div class="settings-panel">
-        <label class="setting-label" for="timbre-select">Timbre</label>
-        <select id="timbre-select" class="select-control">
-          <option value="soft-piano">Piano Suave</option><option value="synth">Sintetizador</option>
-          <option value="organ">Órgão</option><option value="marimba">Marimba / Sino</option>
-        </select>
-        <p class="settings-hint">O timbre selecionado será alternado com os demais a cada questão.</p>
+        <fieldset class="setting-group" data-setting="timbre-mode">
+          <legend>Timbre</legend>
+          <div class="segmented-control">
+            <button type="button" class="segment is-active" data-value="vary" aria-pressed="true">Variar a cada questão</button>
+            <button type="button" class="segment" data-value="fixed" aria-pressed="false">Fixo</button>
+          </div>
+        </fieldset>
+        <fieldset class="setting-group" id="fixed-timbre-settings" data-setting="fixed-timbre" hidden>
+          <legend>Escolha o timbre</legend>
+          <div class="segmented-control timbre-options">
+            <button type="button" class="segment is-active" data-value="soft-piano" aria-pressed="true">Piano Suave</button>
+            <button type="button" class="segment" data-value="synth" aria-pressed="false">Sintetizador</button>
+            <button type="button" class="segment" data-value="organ" aria-pressed="false">Órgão</button>
+            <button type="button" class="segment" data-value="flute" aria-pressed="false">Flauta</button>
+            <button type="button" class="segment" data-value="marimba" aria-pressed="false">Marimba / Sino</button>
+          </div>
+        </fieldset>
         <button class="button button-primary start-button" id="activity3-start-button" type="button">Começar desafio <span aria-hidden="true">→</span></button>
       </div>
     </section>
@@ -162,7 +175,10 @@
     <section class="screen game-screen" id="activity3-game-screen" aria-labelledby="activity3-title" hidden>
       <div class="game-heading">
         <div><p class="eyebrow">ATIVIDADE 3 · DESAFIO DE OUVIDO</p><h1 id="activity3-title">Repita a sequência</h1></div>
-        <button class="button button-secondary restart-button" type="button">Reiniciar / Trocar Config.</button>
+        <div class="heading-actions">
+          <button class="button button-muted mute-button" id="activity3-mute-button" type="button" aria-pressed="false"><span aria-hidden="true">♪</span> Som ligado</button>
+          <button class="button button-secondary restart-button" type="button">Reiniciar / Trocar Config.</button>
+        </div>
       </div>
       <div class="game-toolbar" aria-label="Progresso do desafio">
         <p>Questão <strong id="sequence-question">1 de 12</strong></p><p>Notas restantes <strong id="sequence-remaining">0</strong></p><p>Timbre <strong id="sequence-timbre">Piano Suave</strong></p>
