@@ -18,6 +18,7 @@
       "summary-errors", "summary-accuracy", "summary-time", "new-round-button",
       "settings-button", "match-note", "cipher-options", "match-progress",
       "match-score", "match-message", "sequence-keyboard", "sequence-history",
+      "summary-title",
       "sequence-question", "sequence-remaining", "sequence-timbre",
       "sequence-instruction", "sequence-message", "replay-sequence-button",
       "activity1-start-button", "activity3-start-button", "fixed-timbre-settings"
@@ -162,6 +163,10 @@
   function showSummary(metrics, actions) {
     const attempts = metrics.correct + metrics.errors;
     const accuracy = attempts ? Math.round((metrics.correct / attempts) * 100) : 0;
+    elements["summary-title"].textContent = accuracy >= 90 ? "Excelente!"
+      : accuracy >= 70 ? "Muito bem."
+        : accuracy >= 50 ? "Bom progresso."
+          : "Continue praticando.";
     elements["summary-correct"].textContent = String(metrics.correct);
     elements["summary-errors"].textContent = String(metrics.errors);
     elements["summary-accuracy"].textContent = accuracy + "%";
@@ -175,7 +180,7 @@
     document.querySelectorAll(".mute-button").forEach(function (button) {
       button.setAttribute("aria-pressed", String(isMuted));
       button.innerHTML = isMuted
-        ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4H4z"/><path d="m16 9 5 6m0-6-5 6"/></svg> Som desligado'
+        ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4H4z"/><path d="m16 8 6 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Som desligado'
         : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4H4z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg> Som ligado';
     });
   }

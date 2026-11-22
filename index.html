@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Pratique notas, cifras e percepção musical com atividades interativas de piano.">
-  <meta name="theme-color" content="#0F1013">
+  <meta name="theme-color" content="">
   <meta property="og:title" content="Atividades de Música">
   <meta property="og:description" content="Pratique notas, cifras e percepção musical com atividades interativas de piano.">
   <meta property="og:type" content="website">
@@ -12,7 +12,26 @@
   <meta property="og:url" content="https://nicoolasdev.github.io/atividades-musica/">
   <title>Atividades de Música</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script>
+    (function () {
+      var theme = null;
+      try {
+        theme = window.localStorage.getItem("tema");
+      } catch (error) {
+        theme = null;
+      }
+      if (theme !== "light" && theme !== "dark") {
+        theme = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      }
+      document.documentElement.setAttribute("data-theme", theme);
+    }());
+  </script>
   <link rel="stylesheet" href="css/style.css">
+  <script>
+    document.querySelector('meta[name="theme-color"]').content =
+      getComputedStyle(document.documentElement).getPropertyValue("--page").trim();
+  </script>
+  <script defer src="js/theme.js"></script>
   <script defer src="js/config.js"></script>
   <script defer src="js/audio.js"></script>
   <script defer src="js/piano.js"></script>
@@ -31,6 +50,10 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6M9 12h12"/></svg>
         </button>
       </nav>
+      <button class="icon-button theme-toggle" id="theme-toggle-button" type="button" aria-label="Mudar para tema claro" title="Mudar para tema claro">
+        <svg class="theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
+        <svg class="theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z"/></svg>
+      </button>
     </header>
 
     <section class="screen home-screen" id="home-screen" aria-labelledby="home-title">
@@ -64,7 +87,7 @@
         </button>
         <button class="activity-card" type="button" data-activity="2">
           <span class="activity-art" aria-hidden="true">
-            <svg viewBox="0 0 72 56"><rect x="1" y="4" width="70" height="48" rx="4" fill="none" stroke="currentColor"/><path d="M15 4v48m14-48v48m14-48v48m14-48v48" stroke="currentColor"/><path d="M10 4h9v28h-9zm14 0h9v28h-9zm28 0h9v28h-9zm14 0h9v28h-9z" fill="var(--black-key)"/><path d="M29 34h14v18H29z" fill="var(--accent)"/></svg>
+            <svg viewBox="0 0 72 56"><rect x="1" y="4" width="70" height="48" rx="4" fill="none" stroke="currentColor"/><path d="M15 4v48m14-48v48m14-48v48m14-48v48" stroke="currentColor"/><path d="M10 4h9v28h-9zm14 0h9v28h-9zm28 0h9v28h-9zm14 0h9v28h-9z" fill="var(--black-key)"/><path d="M29 34h14v18H29z" fill="var(--accent-text)"/></svg>
           </span>
           <span class="activity-card-content">
             <span class="activity-card-title">Mapa das Notas</span>
@@ -97,6 +120,7 @@
         <div><h1 id="activity1-title">Qual é a cifra?</h1></div>
         <div class="heading-actions">
           <button class="button button-muted mute-button" id="activity1-mute-button" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4H4z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg> Som ligado</button>
+          <button class="button button-secondary restart-button" type="button">Configurações</button>
         </div>
       </div>
       <div class="game-toolbar" aria-label="Progresso da atividade">
@@ -112,9 +136,6 @@
         <div class="answer-grid" id="cipher-options" aria-labelledby="cipher-options-title"></div>
       </div>
       <p class="live-message" id="match-message" aria-live="polite"></p>
-      <div class="inline-actions">
-        <button class="button button-secondary restart-button" type="button">Configurações</button>
-      </div>
     </section>
 
     <section class="screen settings-screen" id="settings-screen" aria-labelledby="settings-title" hidden>
@@ -154,12 +175,12 @@
       <div class="game-heading">
         <div><p class="eyebrow" id="round-label">RODADA</p><h1 id="game-title">Mapa das Notas</h1></div>
         <div class="heading-actions">
-          <button class="button button-secondary restart-button" type="button">Configurações</button>
           <button class="button button-muted mute-button" id="mute-button" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4H4z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg> Som ligado</button>
+          <button class="button button-secondary restart-button" type="button">Configurações</button>
         </div>
       </div>
       <div class="game-toolbar" aria-label="Progresso da rodada">
-        <p>Conectadas <strong id="progress-value">0/0</strong></p><p>Acertos <strong id="score-value">0</strong></p><p>Erros <strong id="errors-value">0</strong></p><p>Tempo <strong id="timer-value">00:00</strong></p>
+        <p>Conectadas <strong id="progress-value">0/0</strong></p><p>Pontos <strong id="score-value">0</strong></p><p>Erros <strong id="errors-value">0</strong></p><p>Tempo <strong id="timer-value">00:00</strong></p>
       </div>
       <p class="instruction" id="game-instruction">Escolha uma cifra e depois a tecla, ou o contrário.</p>
       <div class="cards-area" id="cards-area" aria-label="Nomes das notas"></div>
@@ -207,12 +228,12 @@
       </div>
       <div class="sequence-controls"><button class="button button-secondary" id="replay-sequence-button" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4H4z"/><path d="M16 9a5 5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg><span class="replay-label">Ouvir novamente</span></button></div>
       <p class="instruction" id="sequence-instruction">Ouça e reproduza as notas na mesma ordem.</p>
+      <p class="live-message" id="sequence-message" aria-live="polite"></p>
       <div class="sequence-history" id="sequence-history" aria-label="Histórico de cliques" aria-live="polite"></div>
       <p class="keyboard-mobile-hint">Dica: vire o celular na horizontal para visualizar as duas oitavas.</p>
       <div class="keyboard-scroll" aria-label="Piano de duas oitavas com rolagem horizontal">
         <div class="keyboard-frame keyboard-frame-wide"><div class="keyboard keyboard-double" id="sequence-keyboard" aria-label="Piano virtual de Dó4 a Si5"></div></div>
       </div>
-      <p class="live-message" id="sequence-message" aria-live="polite"></p>
     </section>
 
     <section class="screen summary-screen" id="summary-screen" aria-labelledby="summary-title" hidden>
