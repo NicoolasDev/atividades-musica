@@ -206,6 +206,17 @@ h2 { font-weight: 500; }
   color: var(--muted);
 }
 
+.activity-art-pair {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
 .activity-card-featured .activity-art {
   width: 72px;
   height: 72px;
@@ -214,7 +225,7 @@ h2 { font-weight: 500; }
 }
 
 .activity-art svg { width: 36px; height: 36px; max-height: 36px; overflow: visible; }
-.activity-art text { fill: currentColor; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 32px; font-weight: 500; }
+.activity-art-pair svg { width: 14px; height: 14px; max-height: none; }
 
 .activity-card-content {
   min-width: 0;
