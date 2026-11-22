@@ -343,8 +343,13 @@
     }
     sequenceIsPlaying = true;
     setSequenceKeyboardDisabled(true);
-    ui.getElements()["replay-sequence-button"].disabled = true;
-    ui.getElements()["sequence-message"].textContent = calmReplay ? "Ouça de novo com calma." : "Ouça com atenção…";
+    const replayButton = ui.getElements()["replay-sequence-button"];
+    replayButton.disabled = true;
+    replayButton.querySelector(".replay-label").textContent = "Ouvindo…";
+    const sequenceMessage = ui.getElements()["sequence-message"];
+    ui.clearFeedback(sequenceMessage);
+    sequenceMessage.classList.remove("is-error", "is-wrong");
+    sequenceMessage.textContent = calmReplay ? "Ouça de novo com calma." : "Ouça com atenção…";
     const timbre = getSequenceTimbre();
     ui.getElements()["sequence-timbre"].textContent = timbre.name;
     const sequence = sequenceQuestions[sequenceIndex];
@@ -371,7 +376,8 @@
     } finally {
       if (sessionId === sequenceSessionId) {
         sequenceIsPlaying = false;
-        ui.getElements()["replay-sequence-button"].disabled = false;
+        replayButton.disabled = false;
+        replayButton.querySelector(".replay-label").textContent = "Ouvir novamente";
       }
     }
   }
@@ -394,7 +400,7 @@
     chooseSequenceTimbre();
     window.KeyMatch.Piano.renderKeyboard(ui.getElements()["sequence-keyboard"], sequenceNotes, { showLabels: true });
     ui.getElements()["sequence-history"].replaceChildren();
-    ui.getElements()["replay-sequence-button"].innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4H4z"/><path d="M16 9a5 5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>Ouvir novamente';
+    ui.getElements()["replay-sequence-button"].innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4H4z"/><path d="M16 9a5 5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg><span class="replay-label">Ouvir novamente</span>';
     updateSequenceProgress();
     ui.showScreen("activity3-game-screen");
     playCurrentSequence(sessionId);
@@ -469,11 +475,13 @@
       && sequenceErrorsForQuestion >= config.ERRORS_BEFORE_REPLAY;
     if (shouldReplay) {
       sequenceErrorsForQuestion = 0;
-      ui.getElements()["sequence-instruction"].textContent = "Ouça de novo com calma.";
+      ui.getElements()["sequence-instruction"].textContent = "Ouvindo de novo…";
+      ui.getElements()["sequence-message"].textContent = "Ouça de novo com calma.";
+      ui.getElements()["sequence-message"].style.color = "var(--muted)";
     } else {
       ui.getElements()["sequence-instruction"].textContent = "A sequência reinicia após um erro. Tente novamente.";
+      ui.showFeedback("Não foi dessa vez. Ouça novamente para tentar de novo.", true, ui.getElements()["sequence-message"]);
     }
-    ui.showFeedback("Não foi dessa vez. Ouça novamente para tentar de novo.", true, ui.getElements()["sequence-message"]);
     if (shouldReplay) {
       playCurrentSequence(sequenceSessionId, true);
     }

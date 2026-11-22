@@ -8,6 +8,7 @@
     "activity3-game-screen", "summary-screen"
   ];
   const elements = {};
+  const feedbackTimeouts = new WeakMap();
 
   function getElements() {
     [
@@ -134,14 +135,28 @@
 
   function showFeedback(message, isError, target) {
     const messageElement = target || elements["live-message"];
+    clearFeedback(messageElement);
     messageElement.textContent = message;
     messageElement.style.color = isError ? "var(--error)" : "var(--success)";
-    window.setTimeout(function () {
+    const timeoutId = window.setTimeout(function () {
+      if (feedbackTimeouts.get(messageElement) === timeoutId) {
+        feedbackTimeouts.delete(messageElement);
+      }
       if (messageElement.textContent === message) {
         messageElement.textContent = "";
         messageElement.style.color = "";
       }
     }, config.animation.messageMs);
+    feedbackTimeouts.set(messageElement, timeoutId);
+  }
+
+  function clearFeedback(messageElement) {
+    const timeoutId = feedbackTimeouts.get(messageElement);
+    if (timeoutId !== undefined) {
+      window.clearTimeout(timeoutId);
+      feedbackTimeouts.delete(messageElement);
+    }
+    messageElement.style.color = "";
   }
 
   function showSummary(metrics, actions) {
@@ -181,6 +196,7 @@
     updateScore: updateScore,
     updateTimer: updateTimer,
     showFeedback: showFeedback,
+    clearFeedback: clearFeedback,
     showSummary: showSummary,
     showScreen: showScreen,
     setMuteButton: setMuteButton,

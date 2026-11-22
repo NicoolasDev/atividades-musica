@@ -36,7 +36,7 @@
     <section class="screen home-screen" id="home-screen" aria-labelledby="home-title">
       <div class="intro">
         <h1 id="home-title">Escolha uma atividade</h1>
-        <p>Avance no seu ritmo: comece pelas notas, explore o teclado e treine o ouvido.</p>
+        <p class="home-subtitle">Treine o ouvido ou revise as notas e cifras.</p>
         <p class="ios-audio-hint" id="ios-audio-hint" hidden>Sem som? Verifique se o modo silencioso do iPhone está desligado.</p>
       </div>
       <div class="activity-grid">
@@ -52,7 +52,7 @@
         </button>
         <button class="activity-card" type="button" data-activity="1">
           <span class="activity-art" aria-hidden="true">
-            <svg viewBox="0 0 148 56"><text x="2" y="36">Dó</text><path d="M58 28h27m-8-8 8 8-8 8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><text x="98" y="36">C</text></svg>
+            <svg viewBox="0 0 72 56"><text x="0" y="38">Dó</text><path d="M29 28h18m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><text x="51" y="38">C</text></svg>
           </span>
           <span class="activity-card-content">
             <span class="activity-card-title">Notas e Cifras</span>
@@ -62,7 +62,7 @@
         </button>
         <button class="activity-card" type="button" data-activity="2">
           <span class="activity-art" aria-hidden="true">
-            <svg viewBox="0 0 148 56"><rect x="2" y="5" width="144" height="46" rx="4" fill="none" stroke="currentColor"/><path d="M26 5v46m24-46v46m24-46v46m24-46v46m24-46v46" stroke="currentColor"/><path d="M16 5h12v27H16zm24 0h12v27H40zm48 0h12v27H88zm24 0h12v27h-12z" fill="var(--black-key)"/><path d="M51 34h22v17H51z" fill="var(--accent)"/></svg>
+            <svg viewBox="0 0 72 56"><rect x="1" y="4" width="70" height="48" rx="4" fill="none" stroke="currentColor"/><path d="M15 4v48m14-48v48m14-48v48m14-48v48" stroke="currentColor"/><path d="M10 4h9v28h-9zm14 0h9v28h-9zm28 0h9v28h-9zm14 0h9v28h-9z" fill="var(--black-key)"/><path d="M29 34h14v18H29z" fill="var(--accent)"/></svg>
           </span>
           <span class="activity-card-content">
             <span class="activity-card-title">Mapa das Notas</span>
@@ -203,7 +203,7 @@
       <div class="game-toolbar" aria-label="Progresso do desafio">
         <p>Questão <strong id="sequence-question">1 de 12</strong></p><p>Notas restantes <strong id="sequence-remaining">0</strong></p><p>Timbre <strong id="sequence-timbre">Piano Suave</strong></p>
       </div>
-      <div class="sequence-controls"><button class="button button-secondary" id="replay-sequence-button" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4H4z"/><path d="M16 9a5 5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>Ouvir novamente</button></div>
+      <div class="sequence-controls"><button class="button button-secondary" id="replay-sequence-button" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4H4z"/><path d="M16 9a5 5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg><span class="replay-label">Ouvir novamente</span></button></div>
       <p class="instruction" id="sequence-instruction">Ouça e reproduza as notas na mesma ordem.</p>
       <div class="sequence-history" id="sequence-history" aria-label="Histórico de cliques" aria-live="polite"></div>
       <p class="keyboard-mobile-hint">Dica: vire o celular na horizontal para visualizar as duas oitavas.</p>
