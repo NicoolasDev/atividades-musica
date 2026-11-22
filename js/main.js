@@ -362,10 +362,8 @@
       }
       sequenceInputIndex = 0;
       ui.getElements()["sequence-remaining"].textContent = String(sequence.length);
-      if (!calmReplay) {
-        ui.getElements()["sequence-instruction"].textContent = "Agora reproduza as notas na mesma ordem.";
-        ui.getElements()["sequence-message"].textContent = "Sua vez!";
-      }
+      ui.getElements()["sequence-instruction"].textContent = "Agora reproduza as notas na mesma ordem.";
+      ui.getElements()["sequence-message"].textContent = "Sua vez!";
       setSequenceKeyboardDisabled(false);
     } catch (error) {
       ui.showAudioError(error);
@@ -396,7 +394,7 @@
     chooseSequenceTimbre();
     window.KeyMatch.Piano.renderKeyboard(ui.getElements()["sequence-keyboard"], sequenceNotes, { showLabels: true });
     ui.getElements()["sequence-history"].replaceChildren();
-    ui.getElements()["replay-sequence-button"].textContent = "🔊 Ouvir novamente";
+    ui.getElements()["replay-sequence-button"].innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4H4z"/><path d="M16 9a5 5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>Ouvir novamente';
     updateSequenceProgress();
     ui.showScreen("activity3-game-screen");
     playCurrentSequence(sessionId);

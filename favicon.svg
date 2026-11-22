@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <style>:root{--surface:#17181D;--accent:#E7B04B}</style>
+  <rect width="64" height="64" rx="14" fill="var(--surface)"/>
+  <path d="M14 13h8v29a10 10 0 1 1-8-9.8V13Zm28 4h8v29a10 10 0 1 1-8-9.8V17Zm-20-4 28-5v7l-28 5v-7Z" fill="var(--accent)"/>
+</svg>

@@ -3,8 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0d1117">
+  <meta name="description" content="Pratique notas, cifras e percepção musical com atividades interativas de piano.">
+  <meta name="theme-color" content="#0F1013">
+  <meta property="og:title" content="Atividades de Música">
+  <meta property="og:description" content="Pratique notas, cifras e percepção musical com atividades interativas de piano.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:url" content="https://nicoolasdev.github.io/atividades-musica/">
   <title>Atividades de Música</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/style.css">
   <script defer src="js/config.js"></script>
   <script defer src="js/audio.js"></script>
@@ -28,33 +35,46 @@
 
     <section class="screen home-screen" id="home-screen" aria-labelledby="home-title">
       <div class="intro">
-        <p class="eyebrow">APRENDIZADO MUSICAL</p>
         <h1 id="home-title">Escolha uma atividade</h1>
         <p>Avance no seu ritmo: comece pelas notas, explore o teclado e treine o ouvido.</p>
         <p class="ios-audio-hint" id="ios-audio-hint" hidden>Sem som? Verifique se o modo silencioso do iPhone está desligado.</p>
       </div>
       <div class="activity-grid">
         <button class="activity-card activity-card-featured" type="button" data-activity="3">
-          <span class="activity-card-title">Desafio de Ouvido</span>
-          <span class="activity-card-copy">Ouça uma sequência e reproduza as notas na ordem. Alterne timbres e teste sua percepção musical.</span>
-          <span class="activity-card-action">Começar desafio <span aria-hidden="true">→</span></span>
+          <span class="activity-art" aria-hidden="true">
+            <svg viewBox="0 0 72 56"><path d="M4 28h6m4-10v20m8-28v36m8-19v2m8-16v30m8-23v16m8-30v44m8-31v18m8-10h2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="3"/></svg>
+          </span>
+          <span class="activity-card-content">
+            <span class="activity-card-title">Desafio de Ouvido</span>
+            <span class="activity-card-copy">Ouça uma sequência e reproduza as notas na ordem. Alterne timbres e teste sua percepção musical.</span>
+            <span class="activity-card-action">Começar desafio <span aria-hidden="true">→</span></span>
+          </span>
         </button>
         <button class="activity-card" type="button" data-activity="1">
-          <span class="activity-card-title">Notas e Cifras</span>
-          <span class="activity-card-copy">Etapa preparatória · relacione os nomes às cifras.</span>
-          <span class="activity-card-action">Começar <span aria-hidden="true">→</span></span>
+          <span class="activity-art" aria-hidden="true">
+            <svg viewBox="0 0 148 56"><text x="2" y="36">Dó</text><path d="M58 28h27m-8-8 8 8-8 8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><text x="98" y="36">C</text></svg>
+          </span>
+          <span class="activity-card-content">
+            <span class="activity-card-title">Notas e Cifras</span>
+            <span class="activity-card-copy">Relacione os nomes das notas às cifras correspondentes.</span>
+            <span class="activity-card-action">Começar <span aria-hidden="true">→</span></span>
+          </span>
         </button>
         <button class="activity-card" type="button" data-activity="2">
-          <span class="activity-card-title">Mapa das Notas</span>
-          <span class="activity-card-copy">Etapa preparatória · encontre as cifras no piano.</span>
-          <span class="activity-card-action">Começar <span aria-hidden="true">→</span></span>
+          <span class="activity-art" aria-hidden="true">
+            <svg viewBox="0 0 148 56"><rect x="2" y="5" width="144" height="46" rx="4" fill="none" stroke="currentColor"/><path d="M26 5v46m24-46v46m24-46v46m24-46v46m24-46v46" stroke="currentColor"/><path d="M16 5h12v27H16zm24 0h12v27H40zm48 0h12v27H88zm24 0h12v27h-12z" fill="var(--black-key)"/><path d="M51 34h22v17H51z" fill="var(--accent)"/></svg>
+          </span>
+          <span class="activity-card-content">
+            <span class="activity-card-title">Mapa das Notas</span>
+            <span class="activity-card-copy">Encontre no piano as teclas correspondentes às cifras.</span>
+            <span class="activity-card-action">Começar <span aria-hidden="true">→</span></span>
+          </span>
         </button>
       </div>
     </section>
 
     <section class="screen settings-screen" id="activity1-setup-screen" aria-labelledby="activity1-settings-title" hidden>
       <div class="intro">
-        <p class="eyebrow">ATIVIDADE 1</p>
         <h1 id="activity1-settings-title">Notas e Cifras</h1>
         <p>Escolha o nível e identifique cada nota por sua cifra.</p>
       </div>
@@ -72,9 +92,9 @@
 
     <section class="screen match-screen" id="activity1-game-screen" aria-labelledby="activity1-title" hidden>
       <div class="game-heading">
-        <div><p class="eyebrow">ATIVIDADE 1 · NOTAS E CIFRAS</p><h1 id="activity1-title">Qual é a cifra?</h1></div>
+        <div><h1 id="activity1-title">Qual é a cifra?</h1></div>
         <div class="heading-actions">
-          <button class="button button-muted mute-button" id="activity1-mute-button" type="button" aria-pressed="false"><span aria-hidden="true">♪</span> Som ligado</button>
+          <button class="button button-muted mute-button" id="activity1-mute-button" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4H4z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg> Som ligado</button>
         </div>
       </div>
       <div class="game-toolbar" aria-label="Progresso da atividade">
@@ -82,7 +102,7 @@
       </div>
       <p class="instruction">Observe a nota e escolha a cifra correspondente.</p>
       <div class="note-question-card" aria-live="polite">
-        <span>NOTA EM PORTUGUÊS</span>
+        <span>Nota em português</span>
         <strong id="match-note">Dó</strong>
       </div>
       <div class="answer-panel">
@@ -91,13 +111,12 @@
       </div>
       <p class="live-message" id="match-message" aria-live="polite"></p>
       <div class="inline-actions">
-        <button class="button button-secondary restart-button" type="button">Reiniciar / Trocar Config.</button>
+        <button class="button button-secondary restart-button" type="button">Configurações</button>
       </div>
     </section>
 
     <section class="screen settings-screen" id="settings-screen" aria-labelledby="settings-title" hidden>
       <div class="intro">
-        <p class="eyebrow">ATIVIDADE 2 · MAPA DAS NOTAS</p>
         <h1 id="settings-title">Ligue cada cifra à tecla</h1>
         <p>Escolha uma configuração e conecte cada nota à tecla correta.</p>
       </div>
@@ -133,8 +152,8 @@
       <div class="game-heading">
         <div><p class="eyebrow" id="round-label">RODADA</p><h1 id="game-title">Mapa das Notas</h1></div>
         <div class="heading-actions">
-          <button class="button button-secondary restart-button" type="button">Reiniciar / Trocar Config.</button>
-          <button class="button button-muted mute-button" id="mute-button" type="button" aria-pressed="false"><span aria-hidden="true">♪</span> Som ligado</button>
+          <button class="button button-secondary restart-button" type="button">Configurações</button>
+          <button class="button button-muted mute-button" id="mute-button" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4H4z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg> Som ligado</button>
         </div>
       </div>
       <div class="game-toolbar" aria-label="Progresso da rodada">
@@ -148,7 +167,7 @@
 
     <section class="screen settings-screen" id="activity3-setup-screen" aria-labelledby="activity3-settings-title" hidden>
       <div class="intro">
-        <p class="eyebrow">ATIVIDADE 3</p><h1 id="activity3-settings-title">Desafio de Ouvido</h1>
+        <h1 id="activity3-settings-title">Desafio de Ouvido</h1>
         <p>Ouça com atenção e reproduza cada sequência no teclado.</p>
       </div>
       <div class="settings-panel">
@@ -175,16 +194,16 @@
 
     <section class="screen game-screen" id="activity3-game-screen" aria-labelledby="activity3-title" hidden>
       <div class="game-heading">
-        <div><p class="eyebrow">ATIVIDADE 3 · DESAFIO DE OUVIDO</p><h1 id="activity3-title">Repita a sequência</h1></div>
+        <div><h1 id="activity3-title">Repita a sequência</h1></div>
         <div class="heading-actions">
-          <button class="button button-muted mute-button" id="activity3-mute-button" type="button" aria-pressed="false"><span aria-hidden="true">♪</span> Som ligado</button>
-          <button class="button button-secondary restart-button" type="button">Reiniciar / Trocar Config.</button>
+          <button class="button button-muted mute-button" id="activity3-mute-button" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4H4z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg> Som ligado</button>
+          <button class="button button-secondary restart-button" type="button">Configurações</button>
         </div>
       </div>
       <div class="game-toolbar" aria-label="Progresso do desafio">
         <p>Questão <strong id="sequence-question">1 de 12</strong></p><p>Notas restantes <strong id="sequence-remaining">0</strong></p><p>Timbre <strong id="sequence-timbre">Piano Suave</strong></p>
       </div>
-      <div class="sequence-controls"><button class="button button-secondary" id="replay-sequence-button" type="button">🔊 Ouvir novamente</button></div>
+      <div class="sequence-controls"><button class="button button-secondary" id="replay-sequence-button" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4H4z"/><path d="M16 9a5 5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>Ouvir novamente</button></div>
       <p class="instruction" id="sequence-instruction">Ouça e reproduza as notas na mesma ordem.</p>
       <div class="sequence-history" id="sequence-history" aria-label="Histórico de cliques" aria-live="polite"></div>
       <p class="keyboard-mobile-hint">Dica: vire o celular na horizontal para visualizar as duas oitavas.</p>

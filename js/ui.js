@@ -160,8 +160,8 @@
     document.querySelectorAll(".mute-button").forEach(function (button) {
       button.setAttribute("aria-pressed", String(isMuted));
       button.innerHTML = isMuted
-        ? '<span aria-hidden="true">♪</span> Som desligado'
-        : '<span aria-hidden="true">♪</span> Som ligado';
+        ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4H4z"/><path d="m16 9 5 6m0-6-5 6"/></svg> Som desligado'
+        : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4H4z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg> Som ligado';
     });
   }
 
